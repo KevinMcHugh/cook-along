@@ -1,0 +1,93 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/kevinmchugh/cook-along/schema/recipe.schema.json",
+  "title": "Recipe",
+  "description": "A recipe rendered by cook-along as one screen per step. Carried in the `recipe` claim of the JWT.",
+  "type": "object",
+  "required": ["title", "steps"],
+  "additionalProperties": false,
+  "properties": {
+    "title": {
+      "description": "Shown in the header, e.g. \"Satay Cook-Along\".",
+      "type": "string", "minLength": 1, "maxLength": 120
+    },
+    "eyebrow": {
+      "description": "Small label above the title, e.g. \"Tuesday · Thai Week\".",
+      "type": "string", "maxLength": 80
+    },
+    "ingredientsTitle": {
+      "description": "Heading of the ingredients sheet. Defaults to \"Ingredients\".",
+      "type": "string", "maxLength": 80
+    },
+    "ingredients": {
+      "description": "Grouped ingredient list behind the Ingredients button. The button is hidden when this is absent or empty.",
+      "type": "array", "maxItems": 30,
+      "items": { "$ref": "#/$defs/ingredientGroup" }
+    },
+    "steps": {
+      "type": "array", "minItems": 1, "maxItems": 100,
+      "items": { "$ref": "#/$defs/step" }
+    },
+    "doneLabel": {
+      "description": "Subtitle under the Done button on the last step. Defaults to \"Enjoy!\".",
+      "type": "string", "maxLength": 60
+    }
+  },
+  "$defs": {
+    "ingredientGroup": {
+      "type": "object",
+      "required": ["items"],
+      "additionalProperties": false,
+      "properties": {
+        "name": { "type": "string", "maxLength": 80 },
+        "items": {
+          "type": "array", "minItems": 1, "maxItems": 100,
+          "items": { "$ref": "#/$defs/ingredient" }
+        }
+      }
+    },
+    "ingredient": {
+      "type": "object",
+      "required": ["name"],
+      "additionalProperties": false,
+      "properties": {
+        "name": { "type": "string", "minLength": 1, "maxLength": 200 },
+        "quantity": { "type": "string", "maxLength": 60 }
+      }
+    },
+    "step": {
+      "type": "object",
+      "required": ["title", "body"],
+      "additionalProperties": false,
+      "properties": {
+        "title": { "type": "string", "minLength": 1, "maxLength": 120 },
+        "body": {
+          "description": "One bullet per entry.",
+          "type": "array", "minItems": 1, "maxItems": 20,
+          "items": { "type": "string", "minLength": 1, "maxLength": 1000 }
+        },
+        "note": { "$ref": "#/$defs/note" },
+        "timer": { "$ref": "#/$defs/timer" }
+      }
+    },
+    "note": {
+      "description": "A callout under the step body. Text may use **bold**; no other markup is rendered.",
+      "type": "object",
+      "required": ["text"],
+      "additionalProperties": false,
+      "properties": {
+        "text": { "type": "string", "minLength": 1, "maxLength": 1000 },
+        "tone": { "enum": ["info", "good"], "default": "info" }
+      }
+    },
+    "timer": {
+      "type": "object",
+      "required": ["seconds"],
+      "additionalProperties": false,
+      "properties": {
+        "seconds": { "type": "integer", "minimum": 1, "maximum": 86400 },
+        "label": { "type": "string", "maxLength": 60 }
+      }
+    }
+  }
+}

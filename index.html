@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="referrer" content="no-referrer">
+<title>Cook-Along</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Big+Shoulders:wght@700;900&family=DM+Sans:wght@400;500;700&family=DM+Mono:wght@500&display=swap" rel="stylesheet">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22%3E%3Ccircle cx=%2250%22 cy=%2250%22 r=%2244%22 fill=%22%23e4572e%22/%3E%3C/svg%3E">
+<link rel="stylesheet" href="styles.css">
+<script type="module" src="src/app.js"></script>
+</head>
+<body>
+<div class="shell">
+<header class="gutter">
+  <div class="head-row">
+    <div class="head-text">
+      <p class="eyebrow" id="eyebrow" hidden></p>
+      <h1 id="stepHeading">Cook-Along</h1>
+    </div>
+    <div class="head-actions">
+      <button class="ing-btn" id="ingBtn" type="button" hidden>Ingredients</button>
+    </div>
+  </div>
+  <div class="progress" id="progress"></div>
+</header>
+
+<main id="main" class="gutter"></main>
+
+<section class="tray" id="tray" aria-label="Timers" hidden></section>
+
+<nav class="footer">
+  <button class="navbtn back" id="backBtn" type="button" disabled>
+    <span>◂ Back</span>
+    <span class="sub" id="backSub">&nbsp;</span>
+  </button>
+  <button class="navbtn next" id="nextBtn" type="button">
+    <span id="nextLabel">Next ▸</span>
+    <span class="sub" id="nextSub">&nbsp;</span>
+  </button>
+</nav>
+</div>
+
+<div class="sheet-backdrop" id="sheetBackdrop">
+  <div class="sheet">
+    <div class="gutter">
+      <div class="sheet-head">
+        <h2 id="sheetTitle">Ingredients</h2>
+        <button class="sheet-close" id="sheetClose" type="button">Close</button>
+      </div>
+      <div id="sheetBody"></div>
+    </div>
+  </div>
+</div>
+</body>
+</html>
