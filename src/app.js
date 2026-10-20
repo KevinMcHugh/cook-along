@@ -349,6 +349,20 @@ function run(recipe, storeKey) {
     renderStep();
   });
 
+  // ← / → step back and forward. Unlike the Done button, → stops at the last
+  // step rather than wrapping to the start, so leaning on it can't lose your place.
+  document.addEventListener("keydown", (e) => {
+    if (e.altKey || e.ctrlKey || e.metaKey || e.shiftKey) return;
+    if (e.target.closest("input, textarea, select, [contenteditable]")) return;
+    if ($("sheetBackdrop").classList.contains("open")) return;
+    let next = state.step;
+    if (e.key === "ArrowRight") next = Math.min(STEPS.length - 1, state.step + 1);
+    else if (e.key === "ArrowLeft") next = Math.max(0, state.step - 1);
+    else return;
+    e.preventDefault();
+    if (next !== state.step) { state.step = next; renderStep(); }
+  });
+
   function requestWake() {
     try {
       if ("wakeLock" in navigator) navigator.wakeLock.request("screen").catch(() => {});

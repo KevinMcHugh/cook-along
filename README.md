@@ -79,6 +79,11 @@ The skill folder carries its own copies of `make-link.mjs`, `src/{jwt,link,valid
 the schema and the example, so it works without the repo. **After changing any
 of those, run `npm run sync-skill`.** `test/skill.test.mjs` fails until you do.
 
+## Keyboard
+
+← and → step back and forward (→ stops at the last step rather than wrapping).
+They're ignored while the ingredients sheet is open or a modifier key is held.
+
 ## Timers
 
 A started timer moves into the **tray** pinned above the back/next bar and
