@@ -1,0 +1,24 @@
+/* Colour tokens shared by the cook page and the editor. */
+:root{
+  --bg:#fbf4ea; --surface:#ffffff; --surface-2:#f1e4d2;
+  --fg:#241c16; --fg-dim:#7c6b5a;
+  --accent:#e4572e; --accent-ink:#ffffff;
+  --amber:#a8690d; --good:#2f7a4f; --border:#e3d5c0;
+  color-scheme:light;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#15100c; --surface:#1f1812; --surface-2:#2a2019;
+    --fg:#f5ece0; --fg-dim:#b4a28c;
+    --accent:#f0703f; --accent-ink:#1a1008;
+    --amber:#f0b429; --good:#4caf7d; --border:#3a2d22;
+    color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#15100c; --surface:#1f1812; --surface-2:#2a2019;
+  --fg:#f5ece0; --fg-dim:#b4a28c;
+  --accent:#f0703f; --accent-ink:#1a1008;
+  --amber:#f0b429; --good:#4caf7d; --border:#3a2d22;
+  color-scheme:dark;
+}

@@ -17,9 +17,11 @@ so the same page can run any recipe.
 
 ```sh
 npm run serve                      # static server on http://localhost:8000
-npm run make-link -- examples/satay.json
+npm run make-link -- examples/satay.json --base http://localhost:8000/
 # → http://localhost:8000/#token=eyJ…   open it
 ```
+
+Or skip the command line and use the editor at `/edit.html` (below).
 
 There are no dependencies to install. Node 20+ is only needed for the scripts and tests.
 
@@ -48,6 +50,34 @@ See [`examples/satay.json`](examples/satay.json) for a full one. The minimum:
 
 The token's payload is `{ "recipe": <recipe> }`. Anything else in the payload is
 ignored.
+
+## Editor
+
+`edit.html` is a copy from → edit → copy to page:
+
+1. **Copy from:** paste a cook-along link, a bare token, or recipe JSON, or
+   start from the example or a blank recipe.
+2. **Edit:** the JSON, checked against the schema as you type, with
+   `$.path: problem` errors listed under it.
+3. **Copy to:** once it's valid, copy the link (it points at the cook page next
+   to the editor), open it, or copy the JSON.
+
+The ✎ button on the cook page opens the current recipe in the editor. The
+editor removes the token from its own address bar after loading, and keeps
+your work as a draft in `localStorage`, so a refresh doesn't throw away edits.
+
+## Skill: sketch → link
+
+[`.claude/skills/cook-along-recipe/`](.claude/skills/cook-along-recipe/SKILL.md)
+is a Claude skill that turns a rough recipe (notes, a pasted recipe, a meal-plan
+entry) into schema-valid JSON and then a link, following house rules for step size,
+timers and notes. Claude Code picks it up automatically in this repo. For
+claude.ai, run `npm run package-skill` and upload `dist/cook-along-recipe.zip`
+under Settings → Capabilities → Skills.
+
+The skill folder carries its own copies of `make-link.mjs`, `src/{jwt,link,validate}.js`,
+the schema and the example, so it works without the repo. **After changing any
+of those, run `npm run sync-skill`.** `test/skill.test.mjs` fails until you do.
 
 ## Timers
 
@@ -94,17 +124,24 @@ in `src/jwt.js` `decode()`.
 ## Hosting
 
 Any static host works. Serve the repo root as-is. For GitHub Pages:
-Settings → Pages → Deploy from branch → `main` / root. Then pass that URL to
-`make-link` as `--base` (or set `COOK_ALONG_BASE`).
+Settings → Pages → Deploy from branch → `main` / root. `make-link` defaults
+to `https://kevinmchugh.github.io/cook-along/`. Pass `--base` or set
+`COOK_ALONG_BASE` for anywhere else.
 
 ## Layout
 
 ```
-index.html, styles.css    the page
-src/app.js                reads the token, renders steps, timer tray, ingredients
+index.html, styles.css    the cook page
+edit.html, edit.css       the editor
+theme.css                 colour tokens shared by both
+src/app.js                cook page: reads the token, renders steps, timer tray, ingredients
+src/edit.js               editor
+src/link.js               link ⇄ recipe (shared by pages, script and skill)
 src/jwt.js                decode / encode an unsigned JWT
 src/validate.js           minimal JSON Schema validator for the recipe schema
 schema/recipe.schema.json the recipe format
 scripts/make-link.mjs     recipe.json → link
+scripts/sync-skill.mjs    copy shared files into the skill; --zip packages it
+.claude/skills/cook-along-recipe/   the sketch → link skill
 test/                     node --test
 ```

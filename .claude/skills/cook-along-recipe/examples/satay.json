@@ -1,0 +1,92 @@
+{
+  "title": "Satay Cook-Along",
+  "eyebrow": "Tuesday · Thai Week",
+  "ingredientsTitle": "For the satay",
+  "doneLabel": "Enjoy dinner",
+  "ingredients": [
+    { "name": "Chicken & marinade", "items": [
+      { "name": "Boneless, skinless chicken thighs", "quantity": "3 lb" },
+      { "name": "Coconut milk", "quantity": "~½ can" },
+      { "name": "Curry powder", "quantity": "1 tbsp" },
+      { "name": "Turmeric", "quantity": "½ tsp" },
+      { "name": "Garlic, minced", "quantity": "3 cloves" },
+      { "name": "Brown sugar", "quantity": "1 tbsp" },
+      { "name": "Fish sauce", "quantity": "2 tbsp" },
+      { "name": "Bell pepper + red onion, chunked", "quantity": "for skewers" },
+      { "name": "Bamboo skewers", "quantity": "1 pack" }
+    ]},
+    { "name": "Peanut sauce", "items": [
+      { "name": "Peanut butter", "quantity": "⅓ cup" },
+      { "name": "Coconut milk", "quantity": "~½ can" },
+      { "name": "Red curry paste", "quantity": "1 tbsp" },
+      { "name": "Fish sauce", "quantity": "1 tbsp" },
+      { "name": "Lime juice", "quantity": "1 lime" },
+      { "name": "Brown sugar", "quantity": "1 tsp" },
+      { "name": "Water, to thin", "quantity": "as needed" }
+    ]},
+    { "name": "Cucumber relish (ajat)", "items": [
+      { "name": "Rice vinegar", "quantity": "¼ cup" },
+      { "name": "Sugar", "quantity": "2 tbsp" },
+      { "name": "Salt", "quantity": "pinch" },
+      { "name": "Cucumber, sliced", "quantity": "1" },
+      { "name": "Shallot, sliced", "quantity": "1" },
+      { "name": "Chili, sliced", "quantity": "1" },
+      { "name": "Cilantro", "quantity": "small handful" }
+    ]},
+    { "name": "To serve", "items": [
+      { "name": "Jasmine rice, cooked", "quantity": "for 2 adults + toddler" }
+    ]}
+  ],
+  "steps": [
+    { "title": "Cut & marinate the chicken",
+      "body": [
+        "Cut 3 lb boneless, skinless chicken thighs into long strips.",
+        "Toss with coconut milk, curry powder, turmeric, minced garlic, brown sugar, and fish sauce until every piece is coated.",
+        "Set aside to marinate — the timer below needs at least 30 minutes, longer is fine."
+      ],
+      "timer": { "seconds": 1800, "label": "Marinating" } },
+    { "title": "Make the peanut sauce",
+      "body": [
+        "Whisk peanut butter, coconut milk, a spoon of red curry paste, fish sauce, lime juice, and brown sugar.",
+        "Thin with a splash of water until it pours off a spoon in a ribbon.",
+        "Make the full batch now — Wednesday's noodle salad reuses it as the dressing."
+      ] },
+    { "title": "Make the cucumber relish",
+      "body": [
+        "Warm the rice vinegar, sugar, and a pinch of salt just until they dissolve — a minute over low heat, no need to boil.",
+        "Pour it over the sliced cucumber, shallot, chili, and cilantro.",
+        "Let it sit at room temperature while you thread the skewers."
+      ] },
+    { "title": "Thread the skewers",
+      "body": [
+        "Thread the marinated chicken onto skewers, alternating with chunks of bell pepper and red onion.",
+        "Thread an extra ~1 lb of chicken on its own skewers, left plain — that's the reserve for Wednesday's noodle salad, not tonight's plate."
+      ],
+      "note": { "text": "**Toddler pull** is coming up after the grill — keep a couple of those plain skewers easy to spot." } },
+    { "title": "Preheat the grill",
+      "body": [
+        "High heat, lid closed.",
+        "Slight rain risk tonight — if it's coming down, a hot cast-iron or grill pan indoors does the same job."
+      ],
+      "timer": { "seconds": 300, "label": "Preheating" } },
+    { "title": "Grill — first side",
+      "body": [
+        "Lay all the skewers down, including the plain reserve batch.",
+        "Don't move them until the timer's done — let them actually sear."
+      ],
+      "timer": { "seconds": 330, "label": "First side" } },
+    { "title": "Flip — second side",
+      "body": [
+        "Flip every skewer, marinated and plain alike.",
+        "Pull the plain reserve skewers a little early if they're browning faster than the sauced ones."
+      ],
+      "timer": { "seconds": 330, "label": "Second side" } },
+    { "title": "Rest, plate, serve",
+      "body": [
+        "Chicken should read 165°F at the thickest piece. Off the grill, rest 2–3 minutes.",
+        "Serve the marinated skewers over jasmine rice with peanut sauce and the cucumber relish.",
+        "Set the plain reserve skewers aside to cool, then refrigerate — Wednesday's satay noodle salad starts from there."
+      ],
+      "note": { "text": "**Toddler pull:** a few plain-grilled pieces off the reserve skewers + rice + unvinegared cucumber, before relish and peanut sauce go on.", "tone": "good" } }
+  ]
+}

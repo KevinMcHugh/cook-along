@@ -4,13 +4,13 @@
 // rather than on someone's phone.
 import { readFileSync } from "node:fs";
 import { parseArgs } from "node:util";
-import { encode } from "../src/jwt.js";
+import { linkFor } from "../src/link.js";
 import { validate } from "../src/validate.js";
 
 const { values, positionals } = parseArgs({
   allowPositionals: true,
   options: {
-    base: { type: "string", default: process.env.COOK_ALONG_BASE || "http://localhost:8000/" },
+    base: { type: "string", default: process.env.COOK_ALONG_BASE || "https://kevinmchugh.github.io/cook-along/" },
   },
 });
 if (positionals.length !== 1) {
@@ -26,7 +26,6 @@ if (errors.length) {
   process.exit(1);
 }
 
-const url = new URL(values.base);
-url.hash = "token=" + encode({ recipe });
-console.log(url.toString());
-if (url.toString().length > 8000) console.error(`note: link is ${url.toString().length} chars; some chat apps truncate long links`);
+const link = linkFor(values.base, recipe);
+console.log(link);
+if (link.length > 8000) console.error(`note: link is ${link.length} chars; some chat apps truncate long links`);

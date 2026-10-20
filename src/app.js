@@ -1,19 +1,8 @@
 import { decode } from "./jwt.js";
 import { validate } from "./validate.js";
+import { tokenFromLocation, loadSchema } from "./link.js";
 
 const $ = (id) => document.getElementById(id);
-
-// The token is read from the fragment (#token=… or a bare #eyJ…) so it never
-// reaches a server log; ?token=… works too for tools that drop fragments.
-export function tokenFromLocation(loc) {
-  const hash = loc.hash.replace(/^#/, "");
-  if (hash) {
-    const p = new URLSearchParams(hash);
-    if (p.get("token")) return p.get("token");
-    if (hash.split(".").length === 3) return hash;
-  }
-  return new URLSearchParams(loc.search).get("token");
-}
 
 // Note text supports **bold** and nothing else. Built with DOM nodes, never
 // innerHTML, because the recipe comes from the URL.
@@ -55,10 +44,14 @@ async function sha256(text) {
 
 async function main() {
   const token = tokenFromLocation(window.location);
+  // Even a broken link gets an Edit button, so it can be fixed in the editor.
+  const edit = $("editBtn");
+  edit.href = token ? "edit.html#token=" + token : "edit.html";
+  edit.hidden = false;
   if (!token) {
     showMessage("No recipe in this link", [
       "Open this page with a recipe token: …/#token=<jwt>.",
-      "Make one with `npm run make-link -- recipe.json` from the repo.",
+      "Or write one in the editor."
     ]);
     return;
   }
@@ -71,7 +64,7 @@ async function main() {
     return;
   }
   try {
-    schema = await (await fetch(new URL("../schema/recipe.schema.json", import.meta.url))).json();
+    schema = await loadSchema();
   } catch (e) {
     showMessage("Can't open this recipe", ["Couldn't load the recipe schema."]);
     return;

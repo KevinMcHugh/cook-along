@@ -10,6 +10,8 @@
   "scripts": {
     "serve": "python3 -m http.server 8000",
     "test": "node --test test/*.test.mjs",
-    "make-link": "node scripts/make-link.mjs"
+    "make-link": "node scripts/make-link.mjs",
+    "sync-skill": "node scripts/sync-skill.mjs",
+    "package-skill": "node scripts/sync-skill.mjs --zip"
   }
 }
