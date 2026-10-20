@@ -79,6 +79,19 @@ The skill folder carries its own copies of `make-link.mjs`, `src/{jwt,link,valid
 the schema and the example, so it works without the repo. **After changing any
 of those, run `npm run sync-skill`.** `test/skill.test.mjs` fails until you do.
 
+## Clock and step outline
+
+The header clock counts up from when you first opened the recipe, with the sum
+of all the recipe's timers underneath ("of 46:00 timed"). It's saved with your
+progress, so a refresh doesn't reset it; tapping Done on the last step starts
+the recipe, and the clock, over.
+
+On screens 760px and wider the page splits: the current step on the left, and
+on the right an outline of every step by title, with its timer length (or live
+countdown once started). The current step is highlighted, finished ones are
+checked off, and tapping any step jumps to it. Phones keep the single-step
+screen.
+
 ## Keyboard
 
 ← and → step back and forward (→ stops at the last step rather than wrapping).

@@ -41,12 +41,76 @@ header{
   padding:9px 12px; cursor:pointer; white-space:nowrap;
 }
 .ing-btn{text-decoration:none;}
+.clock{
+  display:flex; flex-direction:column; align-items:flex-end; gap:1px;
+  padding:0 4px; line-height:1;
+}
+.clock-face{
+  font-family:'DM Mono',monospace; font-weight:500; font-variant-numeric:tabular-nums;
+  font-size:1.15rem;
+}
+.clock-sub{
+  font-family:'DM Mono',monospace; font-size:0.6rem; letter-spacing:0.05em;
+  text-transform:uppercase; color:var(--fg-dim); white-space:nowrap;
+}
+@media (max-width: 479px){ .clock-sub{display:none;} }
 .ing-btn.icon{font-size:0.95rem; padding:7px 10px; line-height:1;}
 .ing-btn:active{transform:scale(0.96);}
 .progress{display:flex;gap:5px;margin-top:12px;}
 .progress .seg{flex:1;height:4px;border-radius:999px;background:var(--border);}
 .progress .seg.done{background:var(--accent);}
 .progress .seg.current{background:var(--amber);}
+
+/* Split: the step on the left, the outline of all steps on the right. Below
+   760px there's no room, so the outline is hidden and the step takes the screen. */
+.split{flex:1 1 auto; display:flex; min-height:0;}
+.work{flex:1 1 auto; min-width:0; display:flex; flex-direction:column;}
+.outline{
+  flex:0 0 clamp(240px, 32vw, 360px);
+  display:flex; flex-direction:column; min-height:0;
+  background:var(--surface);
+  border-left:1px solid var(--border);
+  padding-bottom:env(safe-area-inset-bottom, 0px);
+  padding-right:env(safe-area-inset-right, 0px);
+}
+@media (max-width: 759px){ .outline{display:none;} }
+.message-mode .outline{display:none;}
+.outline-head{
+  font-family:'DM Mono',monospace; font-weight:500;
+  font-size:0.68rem; letter-spacing:0.08em; text-transform:uppercase;
+  color:var(--fg-dim); margin:0; padding:16px 16px 8px;
+}
+.outline-list{list-style:none; margin:0; padding:0 8px 12px; overflow-y:auto; flex:1 1 auto;}
+.outline-btn{
+  width:100%; display:flex; align-items:flex-start; gap:10px;
+  background:none; border:none; border-radius:10px;
+  padding:9px 8px; text-align:left; cursor:pointer;
+  font-family:'DM Sans',sans-serif; font-size:0.92rem; color:var(--fg);
+}
+.outline-btn:hover{background:var(--surface-2);}
+.outline-num{
+  flex:0 0 auto; width:24px; height:24px; border-radius:50%;
+  display:grid; place-items:center;
+  font-family:'DM Mono',monospace; font-size:0.72rem;
+  border:1px solid var(--border); color:var(--fg-dim);
+}
+.outline-title{flex:1 1 auto; min-width:0; line-height:1.35; padding-top:2px; overflow-wrap:anywhere;}
+.outline-timer{
+  flex:0 0 auto; margin-top:2px;
+  font-family:'DM Mono',monospace; font-size:0.72rem; font-variant-numeric:tabular-nums;
+  color:var(--fg-dim); background:var(--surface-2);
+  border-radius:6px; padding:2px 6px;
+}
+.outline-timer.live{color:var(--amber);}
+.outline-timer.ringing{background:var(--accent); color:var(--accent-ink);}
+.outline-item.done .outline-title{color:var(--fg-dim);}
+.outline-item.done .outline-num{background:var(--accent); border-color:var(--accent); color:var(--accent-ink);}
+.outline-item.current .outline-btn{
+  background:color-mix(in srgb, var(--amber) 16%, transparent);
+  box-shadow:inset 3px 0 0 var(--amber);
+}
+.outline-item.current .outline-title{font-weight:700;}
+.outline-item.current .outline-num{background:var(--amber); border-color:var(--amber); color:var(--surface);}
 
 main{
   flex:1 1 auto;
