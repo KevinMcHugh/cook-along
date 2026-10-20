@@ -9,7 +9,7 @@ export function tokenFromLocation(loc) {
   if (hash) {
     const p = new URLSearchParams(hash);
     if (p.get("token")) return p.get("token");
-    if (hash.split(".").length === 3) return hash;
+    if (/^[\w-]+\.[\w-]+(\.[\w-]*)?$/.test(hash)) return hash;
   }
   return new URLSearchParams(loc.search).get("token");
 }

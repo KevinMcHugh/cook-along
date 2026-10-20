@@ -20,10 +20,14 @@ export function bytesToB64url(bytes) {
   return btoa(bin).replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/, "");
 }
 
-/** Returns the token's payload. The signature part may be anything, including empty. */
+/**
+ * Returns the token's payload. The signature part may be anything, including
+ * empty, or missing altogether: an unsigned token ends in ".", and chat apps
+ * and link detectors routinely drop that dot as sentence punctuation.
+ */
 export function decode(token) {
   const parts = String(token).trim().split(".");
-  if (parts.length !== 3) throw new Error("token must have three dot-separated parts");
+  if (parts.length !== 2 && parts.length !== 3) throw new Error("token must look like header.payload.signature");
   const bytes = b64urlToBytes(parts[1]);
   try {
     return JSON.parse(dec.decode(bytes));

@@ -11,8 +11,15 @@ test("ignores the signature, whatever it is", () => {
   assert.equal(decode(`${h}.${p}.c2lnbmF0dXJl`).recipe.title, "x");
 });
 
+test("accepts a token whose trailing dot was stripped", () => {
+  const token = encode({ recipe: { title: "x" } });
+  assert.ok(token.endsWith("."));
+  assert.equal(decode(token.slice(0, -1)).recipe.title, "x");
+});
+
 test("reports malformed tokens clearly", () => {
-  assert.throws(() => decode("abc"), /three/);
+  assert.throws(() => decode("abc"), /header\.payload/);
+  assert.throws(() => decode("a.b.c.d"), /header\.payload/);
   assert.throws(() => decode("a.b!.c"), /base64url/);
   assert.throws(() => decode("a.bm90IGpzb24.c"), /not valid JSON/);
 });

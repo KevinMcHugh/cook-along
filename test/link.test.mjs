@@ -22,6 +22,7 @@ test("finds tokens in fragment, bare fragment and query", () => {
   assert.equal(tokenFromLocation(new URL(`https://x/#token=${t}`)), t);
   assert.equal(tokenFromLocation(new URL(`https://x/#${t}`)), t);
   assert.equal(tokenFromLocation(new URL(`https://x/?token=${t}`)), t);
+  assert.equal(tokenFromLocation(new URL(`https://x/#${t.slice(0, -1)}`)), t.slice(0, -1));
 });
 
 test("explains unreadable input", () => {

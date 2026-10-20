@@ -27,7 +27,8 @@ the link back.
    failure. Fix them and re-run until it prints a URL. Pass `--base URL` (or
    set `COOK_ALONG_BASE`) for a different host. It needs Node 20+ and nothing else.
 4. **Reply** with:
-   - the link, on its own line;
+   - the link, on its own line, with nothing after it (no period or bracket). The
+     token ends in a `.`, and trailing punctuation gets mangled by chat apps;
    - a one-line summary: steps, timers, total active time if obvious;
    - **every assumption you made** (e.g. "assumed 400°F, the sketch didn't say") so
      the user can fix it. They can also tap **Edit** on the cook page to change the
