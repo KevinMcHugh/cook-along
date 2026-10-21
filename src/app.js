@@ -94,18 +94,21 @@ function run(recipe, storeKey) {
       const parsed = JSON.parse(localStorage.getItem(storeKey) || "null");
       if (parsed && typeof parsed.step === "number" && parsed.timers) return parsed;
     } catch (e) {}
-    return { step: 0, timers: {} };
+    return { step: 0, timers: {}, startedAt: null };
   }
   function saveState() {
     try { localStorage.setItem(storeKey, JSON.stringify(state)); } catch (e) {}
   }
   const state = loadState();
   if (state.step < 0 || state.step >= STEPS.length) state.step = 0;
+  if (typeof state.startedAt !== "number") state.startedAt = Date.now();
 
   const mainEl = $("main");
   const progressEl = $("progress");
+  const outlineEl = $("outlineList");
   mainEl.replaceChildren();
   progressEl.replaceChildren();
+  outlineEl.replaceChildren();
 
   STEPS.forEach((step, i) => {
     const el = h("section", "step");
@@ -140,7 +143,35 @@ function run(recipe, storeKey) {
     const seg = h("div", "seg");
     seg.id = "seg-" + i;
     progressEl.appendChild(seg);
+
+    // The outline beside the step (wide screens only) names every step at a
+    // glance; tapping one jumps there.
+    const item = h("li", "outline-item");
+    item.id = "outline-" + i;
+    const go = h("button", "outline-btn");
+    go.type = "button";
+    go.dataset.act = "goto";
+    go.dataset.i = i;
+    go.appendChild(h("span", "outline-num", String(i + 1)));
+    go.appendChild(h("span", "outline-title", step.title));
+    if (step.timer) {
+      const chip = h("span", "outline-timer", fmt(step.timer.seconds));
+      chip.id = "otimer-" + i;
+      go.appendChild(chip);
+    }
+    item.appendChild(go);
+    outlineEl.appendChild(item);
   });
+  $("outline").hidden = false;
+
+  // The header clock: time since you started cooking, against the sum of the
+  // recipe's timers.
+  const timedTotal = STEPS.reduce((sum, step) => sum + (step.timer ? step.timer.seconds : 0), 0);
+  $("clock").hidden = false;
+  $("clockSub").textContent = timedTotal ? `of ${fmt(timedTotal)} timed` : "elapsed";
+  $("clock").title = timedTotal
+    ? `Time since you started · the recipe's timers add up to ${fmt(timedTotal)}`
+    : "Time since you started";
 
   // Timers live in the tray above the back/next bar, not in the step, so a
   // 30-minute marinade stays in view while you work through the next steps.
@@ -258,9 +289,19 @@ function run(recipe, storeKey) {
     const status = card.querySelector(".timer-status");
     status.hidden = !t.active;
     status.textContent = t.finished ? "Time's up — see the timer below." : `${fmt(remaining)} left${t.running ? "" : " (paused)"} — running in the timer bar below.`;
+
+    const chip = $("otimer-" + i);
+    chip.textContent = t.finished ? "Done" : fmt(t.active ? remaining : step.timer.seconds);
+    chip.classList.toggle("live", t.active && t.running);
+    chip.classList.toggle("ringing", t.finished);
+  }
+
+  function renderClock() {
+    $("clockFace").textContent = fmt((Date.now() - state.startedAt) / 1000);
   }
 
   function renderTimers() {
+    renderClock();
     STEPS.forEach((step, i) => { if (step.timer) renderTimer(i); });
     tray.hidden = !STEPS.some((step, i) => step.timer && state.timers[i] && state.timers[i].active);
   }
@@ -271,14 +312,14 @@ function run(recipe, storeKey) {
     const btn = e.target.closest("[data-act]");
     if (!btn) return;
     const i = parseInt(btn.dataset.i, 10);
-    const step = STEPS[i];
-    const t = timerState(i);
     const act = btn.dataset.act;
     if (act === "goto") {
       state.step = i;
       renderStep();
       return;
     }
+    const step = STEPS[i];
+    const t = timerState(i);
     if (act === "start") {
       Object.assign(t, { remaining: step.timer.seconds, total: step.timer.seconds, running: true, active: true, finished: false });
       t.endAt = Date.now() + t.remaining * 1000;
@@ -316,6 +357,7 @@ function run(recipe, storeKey) {
   }
   mainEl.addEventListener("click", onTimerClick);
   tray.addEventListener("click", onTimerClick);
+  outlineEl.addEventListener("click", onTimerClick);
 
   // iOS only lets audio play after a user gesture; a silent beep on the
   // first Start tap unlocks it for the alarm later.
@@ -330,7 +372,12 @@ function run(recipe, storeKey) {
     STEPS.forEach((step, i) => {
       $("step-" + i).classList.toggle("active", i === state.step);
       $("seg-" + i).className = "seg" + (i < state.step ? " done" : i === state.step ? " current" : "");
+      const item = $("outline-" + i);
+      item.className = "outline-item" + (i < state.step ? " done" : i === state.step ? " current" : "");
+      if (i === state.step) item.setAttribute("aria-current", "step");
+      else item.removeAttribute("aria-current");
     });
+    $("outline-" + state.step).scrollIntoView({ block: "nearest" });
     renderTimers();
     $("backBtn").disabled = state.step === 0;
     const last = state.step === STEPS.length - 1;
@@ -345,6 +392,8 @@ function run(recipe, storeKey) {
     if (state.step > 0) { state.step -= 1; renderStep(); }
   });
   $("nextBtn").addEventListener("click", () => {
+    // Done starts the recipe over, clock included.
+    if (state.step === STEPS.length - 1) state.startedAt = Date.now();
     state.step = state.step < STEPS.length - 1 ? state.step + 1 : 0;
     renderStep();
   });

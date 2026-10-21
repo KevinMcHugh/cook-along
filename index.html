@@ -22,6 +22,10 @@
       <h1 id="stepHeading">Cook-Along</h1>
     </div>
     <div class="head-actions">
+      <div class="clock" id="clock" hidden>
+        <span class="clock-face" id="clockFace">0:00</span>
+        <span class="clock-sub" id="clockSub"></span>
+      </div>
       <a class="ing-btn icon" id="editBtn" href="edit.html" title="Edit this recipe" aria-label="Edit this recipe" hidden>✎</a>
       <button class="ing-btn" id="ingBtn" type="button" hidden>Ingredients</button>
     </div>
@@ -29,6 +33,8 @@
   <div class="progress" id="progress"></div>
 </header>
 
+<div class="split">
+<div class="work">
 <main id="main" class="gutter"></main>
 
 <section class="tray" id="tray" aria-label="Timers" hidden></section>
@@ -43,6 +49,13 @@
     <span class="sub" id="nextSub">&nbsp;</span>
   </button>
 </nav>
+</div>
+
+<aside class="outline" id="outline" aria-label="All steps" hidden>
+  <h2 class="outline-head">Steps</h2>
+  <ol class="outline-list" id="outlineList"></ol>
+</aside>
+</div>
 </div>
 
 <div class="sheet-backdrop" id="sheetBackdrop">
