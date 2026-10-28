@@ -54,6 +54,7 @@ header{
   text-transform:uppercase; color:var(--fg-dim); white-space:nowrap;
 }
 @media (max-width: 479px){ .clock-sub{display:none;} }
+.clock.stopped .clock-face{color:var(--fg-dim);}
 .ing-btn.icon{font-size:0.95rem; padding:7px 10px; line-height:1;}
 .ing-btn:active{transform:scale(0.96);}
 .progress{display:flex;gap:5px;margin-top:12px;}

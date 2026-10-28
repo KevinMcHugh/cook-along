@@ -94,7 +94,7 @@ function run(recipe, storeKey) {
       const parsed = JSON.parse(localStorage.getItem(storeKey) || "null");
       if (parsed && typeof parsed.step === "number" && parsed.timers) return parsed;
     } catch (e) {}
-    return { step: 0, timers: {}, startedAt: null };
+    return { step: 0, timers: {}, startedAt: null, stoppedAt: null };
   }
   function saveState() {
     try { localStorage.setItem(storeKey, JSON.stringify(state)); } catch (e) {}
@@ -102,6 +102,7 @@ function run(recipe, storeKey) {
   const state = loadState();
   if (state.step < 0 || state.step >= STEPS.length) state.step = 0;
   if (typeof state.startedAt !== "number") state.startedAt = Date.now();
+  if (typeof state.stoppedAt !== "number") state.stoppedAt = null;
 
   const mainEl = $("main");
   const progressEl = $("progress");
@@ -172,6 +173,15 @@ function run(recipe, storeKey) {
   $("clock").title = timedTotal
     ? `Time since you started · the recipe's timers add up to ${fmt(timedTotal)}`
     : "Time since you started";
+
+  // Stop freezes the clock; tapping again picks up where it left off.
+  $("clockBtn").hidden = false;
+  $("clockBtn").addEventListener("click", () => {
+    if (state.stoppedAt === null) state.stoppedAt = Date.now();
+    else { state.startedAt += Date.now() - state.stoppedAt; state.stoppedAt = null; }
+    saveState();
+    renderClock();
+  });
 
   // Timers live in the tray above the back/next bar, not in the step, so a
   // 30-minute marinade stays in view while you work through the next steps.
@@ -297,7 +307,14 @@ function run(recipe, storeKey) {
   }
 
   function renderClock() {
-    $("clockFace").textContent = fmt((Date.now() - state.startedAt) / 1000);
+    const stopped = state.stoppedAt !== null;
+    $("clockFace").textContent = fmt(((stopped ? state.stoppedAt : Date.now()) - state.startedAt) / 1000);
+    $("clock").classList.toggle("stopped", stopped);
+    const btn = $("clockBtn");
+    btn.textContent = stopped ? "▶" : "■";
+    btn.title = stopped ? "Resume the clock" : "Stop the clock";
+    btn.setAttribute("aria-label", btn.title);
+    btn.setAttribute("aria-pressed", String(stopped));
   }
 
   function renderTimers() {
@@ -393,7 +410,7 @@ function run(recipe, storeKey) {
   });
   $("nextBtn").addEventListener("click", () => {
     // Done starts the recipe over, clock included.
-    if (state.step === STEPS.length - 1) state.startedAt = Date.now();
+    if (state.step === STEPS.length - 1) { state.startedAt = Date.now(); state.stoppedAt = null; }
     state.step = state.step < STEPS.length - 1 ? state.step + 1 : 0;
     renderStep();
   });
