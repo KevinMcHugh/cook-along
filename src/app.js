@@ -94,15 +94,13 @@ function run(recipe, storeKey) {
       const parsed = JSON.parse(localStorage.getItem(storeKey) || "null");
       if (parsed && typeof parsed.step === "number" && parsed.timers) return parsed;
     } catch (e) {}
-    return { step: 0, timers: {}, startedAt: null, stoppedAt: null };
+    return { step: 0, timers: {} };
   }
   function saveState() {
     try { localStorage.setItem(storeKey, JSON.stringify(state)); } catch (e) {}
   }
   const state = loadState();
   if (state.step < 0 || state.step >= STEPS.length) state.step = 0;
-  if (typeof state.startedAt !== "number") state.startedAt = Date.now();
-  if (typeof state.stoppedAt !== "number") state.stoppedAt = null;
 
   const mainEl = $("main");
   const progressEl = $("progress");
@@ -116,6 +114,11 @@ function run(recipe, storeKey) {
     el.id = "step-" + i;
     el.appendChild(h("p", "step-eyebrow", `Step ${i + 1} of ${STEPS.length}`));
     el.appendChild(h("h2", "step-title", step.title));
+    // The first screen says roughly how long the whole thing takes.
+    if (i === 0) {
+      const est = estimate(recipe);
+      if (est) el.appendChild(h("p", "estimate", est));
+    }
     const ul = h("ul", "step-body");
     step.body.forEach((line) => ul.appendChild(h("li", null, line)));
     el.appendChild(ul);
@@ -164,24 +167,6 @@ function run(recipe, storeKey) {
     outlineEl.appendChild(item);
   });
   $("outline").hidden = false;
-
-  // The header clock: time since you started cooking, against the sum of the
-  // recipe's timers.
-  const timedTotal = STEPS.reduce((sum, step) => sum + (step.timer ? step.timer.seconds : 0), 0);
-  $("clock").hidden = false;
-  $("clockSub").textContent = timedTotal ? `of ${fmt(timedTotal)} timed` : "elapsed";
-  $("clock").title = timedTotal
-    ? `Time since you started · the recipe's timers add up to ${fmt(timedTotal)}`
-    : "Time since you started";
-
-  // Stop freezes the clock; tapping again picks up where it left off.
-  $("clockBtn").hidden = false;
-  $("clockBtn").addEventListener("click", () => {
-    if (state.stoppedAt === null) state.stoppedAt = Date.now();
-    else { state.startedAt += Date.now() - state.stoppedAt; state.stoppedAt = null; }
-    saveState();
-    renderClock();
-  });
 
   // Timers live in the tray above the back/next bar, not in the step, so a
   // 30-minute marinade stays in view while you work through the next steps.
@@ -306,19 +291,7 @@ function run(recipe, storeKey) {
     chip.classList.toggle("ringing", t.finished);
   }
 
-  function renderClock() {
-    const stopped = state.stoppedAt !== null;
-    $("clockFace").textContent = fmt(((stopped ? state.stoppedAt : Date.now()) - state.startedAt) / 1000);
-    $("clock").classList.toggle("stopped", stopped);
-    const btn = $("clockBtn");
-    btn.textContent = stopped ? "▶" : "■";
-    btn.title = stopped ? "Resume the clock" : "Stop the clock";
-    btn.setAttribute("aria-label", btn.title);
-    btn.setAttribute("aria-pressed", String(stopped));
-  }
-
   function renderTimers() {
-    renderClock();
     STEPS.forEach((step, i) => { if (step.timer) renderTimer(i); });
     tray.hidden = !STEPS.some((step, i) => step.timer && state.timers[i] && state.timers[i].active);
   }
@@ -409,8 +382,6 @@ function run(recipe, storeKey) {
     if (state.step > 0) { state.step -= 1; renderStep(); }
   });
   $("nextBtn").addEventListener("click", () => {
-    // Done starts the recipe over, clock included.
-    if (state.step === STEPS.length - 1) { state.startedAt = Date.now(); state.stoppedAt = null; }
     state.step = state.step < STEPS.length - 1 ? state.step + 1 : 0;
     renderStep();
   });
@@ -436,6 +407,18 @@ function run(recipe, storeKey) {
   }
 
   renderStep();
+}
+
+// "About 1 hr 15 min total" from the recipe's own estimate. Without one, fall
+// back to what the timers add up to, labelled as such since prep isn't in it.
+function minutesText(min) {
+  const hr = Math.floor(min / 60), m = min % 60;
+  return [hr ? hr + " hr" : "", m ? m + " min" : ""].filter(Boolean).join(" ");
+}
+function estimate(recipe) {
+  if (recipe.totalMinutes) return `About ${minutesText(recipe.totalMinutes)} total`;
+  const timed = recipe.steps.reduce((sum, s) => sum + (s.timer ? s.timer.seconds : 0), 0);
+  return timed >= 60 ? `Timers alone add up to ${minutesText(Math.round(timed / 60))}` : "";
 }
 
 function buildIngredients(recipe) {

@@ -42,6 +42,7 @@ See [`examples/satay.json`](examples/satay.json) for a full one. The minimum:
 | Field | Notes |
 |---|---|
 | `title`, `eyebrow` | Header text. |
+| `totalMinutes` | Estimated time start to finish. Shown on the first step ("About 1 hr 15 min total"). Without it, step 1 shows what the timers add up to instead. |
 | `ingredients[]` | Groups of `{ name, quantity }`. The Ingredients button is hidden without them. `ingredientsTitle` names the sheet. |
 | `steps[].body[]` | One bullet per string. Plain text. |
 | `steps[].note` | Callout under the body. `tone`: `info` (amber) or `good` (green). `**bold**` is the only markup. |
@@ -79,12 +80,7 @@ The skill folder carries its own copies of `make-link.mjs`, `src/{jwt,link,valid
 the schema and the example, so it works without the repo. **After changing any
 of those, run `npm run sync-skill`.** `test/skill.test.mjs` fails until you do.
 
-## Clock and step outline
-
-The header clock counts up from when you first opened the recipe, with the sum
-of all the recipe's timers underneath ("of 46:00 timed"). It's saved with your
-progress, so a refresh doesn't reset it; tapping Done on the last step starts
-the recipe, and the clock, over.
+## Step outline
 
 On screens 760px and wider the page splits: the current step on the left, and
 on the right an outline of every step by title, with its timer length (or live

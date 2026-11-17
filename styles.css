@@ -41,20 +41,6 @@ header{
   padding:9px 12px; cursor:pointer; white-space:nowrap;
 }
 .ing-btn{text-decoration:none;}
-.clock{
-  display:flex; flex-direction:column; align-items:flex-end; gap:1px;
-  padding:0 4px; line-height:1;
-}
-.clock-face{
-  font-family:'DM Mono',monospace; font-weight:500; font-variant-numeric:tabular-nums;
-  font-size:1.15rem;
-}
-.clock-sub{
-  font-family:'DM Mono',monospace; font-size:0.6rem; letter-spacing:0.05em;
-  text-transform:uppercase; color:var(--fg-dim); white-space:nowrap;
-}
-@media (max-width: 479px){ .clock-sub{display:none;} }
-.clock.stopped .clock-face{color:var(--fg-dim);}
 .ing-btn.icon{font-size:0.95rem; padding:7px 10px; line-height:1;}
 .ing-btn:active{transform:scale(0.96);}
 .progress{display:flex;gap:5px;margin-top:12px;}
@@ -131,6 +117,11 @@ main{
   font-family:'DM Mono',monospace;
   font-size:0.72rem; letter-spacing:0.07em; text-transform:uppercase;
   color:var(--fg-dim); margin:0 0 6px;
+}
+.estimate{
+  font-family:'DM Mono',monospace;
+  font-size:0.8rem; letter-spacing:0.04em;
+  color:var(--amber); margin:-6px 0 18px;
 }
 .step-title{
   font-family:'Big Shoulders',sans-serif;
