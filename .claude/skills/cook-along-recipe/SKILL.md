@@ -46,6 +46,7 @@ Change the JSON, then re-run make-link.
 {
   "title": "Satay Cook-Along",            // required, ≤120 chars
   "eyebrow": "Tuesday · Thai Week",       // optional small label above the title
+  "totalMinutes": 75,                     // optional estimated total time, start to finish (integer 1–1440)
   "ingredientsTitle": "For the satay",    // optional heading for the ingredients sheet
   "ingredients": [                        // optional; groups of items
     { "name": "Peanut sauce", "items": [ { "name": "Peanut butter", "quantity": "⅓ cup" } ] }
@@ -63,7 +64,7 @@ Change the JSON, then re-run make-link.
 ```
 
 No other properties are allowed anywhere (`additionalProperties: false`): no `servings`,
-`time`, `url`, or `image`. Put that kind of detail in `eyebrow` or a step.
+`url`, or `image`. Put that kind of detail in `eyebrow` or a step.
 Strings are plain text. The only markup is `**bold**` inside `note.text`.
 
 ## Authoring rules
@@ -92,6 +93,11 @@ These are what make it pleasant to cook from, not just valid.
   range in the body ("8–10 minutes; check at 8").
 - `label` names the wait, as a noun or gerund: "Marinating", "Preheating", "Second side".
   It shows in the tray next to other timers, so make it distinguishable.
+
+**Total time**
+- Set `totalMinutes` to a realistic start-to-finish estimate: prep, waits and cooking,
+  counting timers that overlap only once. Use the source's total if it gives one. It
+  shows on the first step. If you estimated it yourself, say so in your assumptions.
 
 **Notes**
 - For warnings, tips, kid or allergy variants, and make-ahead/leftover hand-offs. One per step at most.
